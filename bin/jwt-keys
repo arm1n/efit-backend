@@ -1,0 +1,27 @@
+#!/bin/bash
+
+usage () { echo "Usage : $0 -p <password as plaintext> | $0 -e <password from env>"; }
+
+DIR="var/jwt"
+PUBLIC="${DIR}/public.pem"
+PRIVATE="${DIR}/private.pem"
+
+while getopts :e:p: option ; do
+ case "${option}" in
+	e) PASS="env:${OPTARG}";;
+	p) PASS="pass:${OPTARG}";;
+	*) usage; exit 1;;
+ esac
+done
+
+if [ -z "$PASS" ]; then
+   usage
+   exit
+fi
+
+mkdir -p $DIR
+
+if [ ! -e $PRIVATE ]; then
+	openssl genrsa -out $PRIVATE -passout $PASS -aes256 4096
+	openssl rsa -pubout -in $PRIVATE -passin $PASS -out $PUBLIC
+fi

@@ -1,0 +1,141 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: de
+    app.locales: en|de
+
+    fos_rest.serializer.exception_normalizer.jms.class: AppBundle\Handler\JMSExceptionHandler
+
+framework:
+    #esi: ~
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    serializer: { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: false
+    property_info:
+        # required for FOSRestBundle for deserialization:
+        # https://stackoverflow.com/questions/37741197
+        enabled: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
+        charset: utf8
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        hydrators:
+            ColumnHydrator: AppBundle\Hydrators\ColumnHydrator
+
+# Swiftmailer Configuration
+swiftmailer:
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    transport: '%mailer_transport%'
+    delivery_addresses: '%mailer_recipients%'
+
+# JWT Auth Configuration
+lexik_jwt_authentication:
+    private_key_path: '%jwt_private_key_path%'
+    public_key_path:  '%jwt_public_key_path%'
+    pass_phrase:      '%jwt_key_pass_phrase%'
+    token_ttl:        '%jwt_token_ttl%'
+    token_extractors:
+        authorization_header:
+            enabled: true
+            prefix: Bearer
+            name: Authorization
+        query_parameter:
+            enabled: true
+            name: bearer
+
+# JWT Refresh Configuration
+gesdinet_jwt_refresh_token:
+    user_provider: AppBundle\Security\JWTRefreshUserProvider
+    ttl_update: true
+    firewall: api
+    ttl: 2592000
+
+# CORS Configuration
+nelmio_cors:
+    defaults:
+        allow_credentials: false
+        allow_origin: []
+        allow_headers: []
+        allow_methods: []
+        expose_headers: []
+        max_age: 0
+        hosts: []
+    paths:
+        '^/api':
+            allow_credentials: false
+            origin_regex: false
+            allow_origin: ['*']
+            allow_headers: ['*']
+            allow_methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+            max_age: 3600
+
+# DoctrineMigrations Configuration
+doctrine_migrations:
+    dir_name: "%kernel.root_dir%/DoctrineMigrations"
+    namespace: AppBundle\Migrations
+    table_name: efit_migrations
+    name: eFit Migrations
+
+# FOSRest Configuration
+fos_rest:
+    exception:
+        enabled: true
+    serializer:
+        serialize_null: false
+    view:
+        serialize_null: false
+        view_response_listener: force
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validation
+    param_fetcher_listener: true
+    access_denied_listener: true
+    allowed_methods_listener: true
+    format_listener:
+        enabled: true
+        rules:
+            - { path: ^/api, priorities: ['json'], fallback_format: json, prefer_extension: false }
+            - { path: ^/, stop: true }

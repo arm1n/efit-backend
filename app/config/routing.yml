@@ -1,0 +1,20 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+# JWT frontend
+frontend_signin:
+    path: '/api/auth/frontend/signin'
+
+# JWT backend
+backend_signin:
+    path: '/api/auth/backend/signin'
+
+# JWT signout (all)
+token_revoke:
+    path: '/api/signout'
+
+# JWT refresh
+token_refresh:
+    path: '/api/auth/refresh'
+    defaults: { _controller: gesdinet.jwtrefreshtoken:refresh }

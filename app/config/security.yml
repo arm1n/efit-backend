@@ -1,0 +1,63 @@
+security:
+
+    providers:
+        chain:
+            chain:
+                providers: [user, admin]
+        user:
+            entity: { class: AppBundle:User, property: username }
+
+        admin:
+            entity: { class: AppBundle:Admin, property: username }
+
+    encoders:
+        AppBundle\Entity\User: bcrypt
+        AppBundle\Entity\Admin: bcrypt
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        auth_frontend:
+            pattern:  ^/api/auth/frontend/signin
+            stateless: true
+            anonymous: true
+            provider: user
+            guard:
+                authenticators:
+                    - AppBundle\Security\FrontendAuthenticator
+
+        auth_backend:
+            pattern:  ^/api/auth/backend/signin
+            stateless: true
+            anonymous: true
+            provider: admin
+            form_login:
+                check_path: /api/auth/backend/signin
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+        auth:
+            pattern:  ^/api/auth
+            stateless: true
+            anonymous: true
+
+        api:
+            pattern: ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+            logout:
+                path: /api/signout
+                success_handler: app.logout_success_handler
+
+    access_control:
+        - { path: ^/api/auth, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN]

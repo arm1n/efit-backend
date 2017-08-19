@@ -1,0 +1,112 @@
+# Learn more about services, parameters and containers at
+# https://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+        public: false
+
+    # makes classes in src/AppBundle available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    AppBundle\:
+        resource: '../../src/AppBundle/*'
+        exclude: '../../src/AppBundle/{Entity,EventListener,Exception,Handler,Hydrators,Normalizer,Repository,Response,Tests}'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    AppBundle\Controller\:
+        resource: '../../src/AppBundle/Controller'
+        tags: ['controller.service_arguments']
+        public: true
+
+    # custom services for this AppBundle
+
+    # event listeners
+    app.event_listener_jwt:
+        class: AppBundle\EventListener\JWTListener
+        arguments:
+            - '@request_stack'
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_expired, method: onJWTExpired }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    app.event_listener_workshop:
+        class: AppBundle\EventListener\WorkshopListener
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+    
+    # handlers
+    app.logout_success_handler:
+        class: AppBundle\Handler\LogoutSuccessHandler
+
+    # responses
+    AppBundle\Response\SSE:
+        shared: false
+        public: true
+
+    # repositories
+    AppBundle\Repository\AdminRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Admin
+
+    AppBundle\Repository\ResultRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Result
+
+    AppBundle\Repository\StatsRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Stats
+
+    AppBundle\Repository\TaskRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Task
+
+    AppBundle\Repository\TicketRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Ticket
+
+    AppBundle\Repository\UserRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\User
+
+    AppBundle\Repository\WorkshopRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Workshop
+
+    # override/adjust third party bundles
+    
+    # FOSRestBundle: use our custom exception handler for responses
+    # https://github.com/FriendsOfSymfony/FOSRestBundle/issues/1500
+    fos_rest.serializer.exception_normalizer.jms:
+        class: AppBundle\Handler\JMSExceptionHandler
+        tags:
+            - { name: jms_serializer.subscribing_handler }
+        public: true
+    
+    # JMSSerializer: use doctrine object constructor for
+    # deserializing json data from create/update requests
+    # https://github.com/schmittjoh/serializer/issues/79
+    jms_serializer.object_constructor:
+        alias: jms_serializer.doctrine_object_constructor
+        public: false
+    
+    # JMSSerializer: use attribute names instead of snake
+    # case on an app on top of `SerializedName` annotation:
+    # https://github.com/schmittjoh/serializer/issues/334
+    jms_serializer.camel_case_naming_strategy:
+        class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+    
