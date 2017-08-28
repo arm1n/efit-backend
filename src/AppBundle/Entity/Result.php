@@ -40,7 +40,7 @@ class Result
      * )
      * @ORM\JoinColumn(nullable=false)
      * @JMS\Groups({"backend", "frontend"})
-     * @JMS\MaxDepth(1)
+     * @JMS\MaxDepth(3)
      */
     private $user;
 

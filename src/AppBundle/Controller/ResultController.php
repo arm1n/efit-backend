@@ -206,6 +206,24 @@ class ResultController extends ApiController
     }
 
     /**
+     * Fetches all results from provided task.
+     *
+     * @View(
+     *     serializerGroups={"backend"},
+     *     serializerEnableMaxDepthChecks=false
+     * )
+     * @Get("/api/result/task/{id}")
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @throws AppBundle\Exception\ApiException
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    public function getResultsByTaskAction(Task $task)
+    {
+        return $task->getResults();
+    }
+
+    /**
      * Asserts that user can perform write operation on results.
      * 
      * @param AppBundle\Entity\Result $result
@@ -328,7 +346,7 @@ class ResultController extends ApiController
         $filterTypes = function($type) use ($workshop) {
             // drop tasks which are per se not countable
             // (f.e. if a task has no result to submit!)
-            if (Task::getShouldSkipStatsByType($type)) {
+            if (!Task::getIsInteractiveByType($type)) {
                 return false;
             }
 
@@ -342,11 +360,21 @@ class ResultController extends ApiController
             return !Task::getIsWorkshopOnlyByType($type);
         };
 
-        $openTypes = array_map(
-            function($result) { return $result->getTask()->getType(); },
-            $repository->getOpenResultsByTaskAndUser($task, $user)
+        // collect `openTypes` array while filtering results,
+        // which we need as well to update `inBlock` property
+        $openTypes = []; $openResults = array_filter(
+            $repository->getOpenResultsByTaskAndUser($task, $user),
+            function($result) use ($filterTypes, &$openTypes) {
+                $type = $result->getTask()->getType();
+                $openType = $filterTypes($type);
+                if ($openType === false) {
+                    return false;
+                }
+
+                $openTypes[] = $type;
+                return true;
+            }
         );
-        $openTypes = array_filter($openTypes, $filterTypes);
         
         $allTypes = Task::getTasksByBlock($block);
         $allTypes = array_filter($allTypes, $filterTypes);

@@ -21,6 +21,7 @@ class Ticket
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     * @JMS\Groups({"backend", "frontend"})
      */
     private $id;
 

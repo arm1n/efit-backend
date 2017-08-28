@@ -100,7 +100,7 @@ class Task
      * @ORM\Column(type="boolean", name="is_active")
      * @JMS\Groups({"backend","frontend","deserialize"})
      */
-    private $isActive = 1;
+    private $isActive = 0;
 
     /**
      * Initializes `results` collection.
@@ -165,6 +165,18 @@ class Task
     public function getIsWorkshopOnly()
     {
         return self::getIsWorkshopOnlyByType($this->getType());
+    }
+
+    /**
+     * If task has submittable results.
+     *
+     * @JMS\VirtualProperty()
+     * @JMS\SerializedName("isInteractive")
+     * @JMS\Groups({"backend", "frontend"})
+     */
+    public function getIsInteractive()
+    {
+        return self::getIsInteractiveByType($this->getType());
     }
 
     /**
@@ -515,9 +527,15 @@ class Task
      * @param string $type
      * @return boolean
      */
-    public static function getShouldSkipStatsByType($type)
+    public static function getIsInteractiveByType($type)
     {
-        return false;
+        switch($type) {
+            case self::TYPE_SAVINGS_SUPPORTED:
+                return false;
+
+            default:
+                return true;
+        }
     }
 
     /**
@@ -533,6 +551,7 @@ class Task
         switch($type) {
             case self::TYPE_ANCHORING:
             case self::TYPE_MENTAL_BOOKKEEPING:
+            case self::TYPE_PROCRASTINATION:
                 return true;
 
             default:

@@ -48,7 +48,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", unique=true)
      * @Assert\Regex(
-     *     pattern="/^[a-z][a-z](?:0[1-9]|[12]\d|3[01])[A-Z]\d$/",
+     *     pattern="/^[A-Za-z][A-Za-z](?:0[1-9]|[12]\d|3[01])[A-Za-z]\d$/",
      *     message="Personal code allows a specific pattern only!"
      * )
      * @JMS\Groups({"backend", "frontend"})
@@ -76,6 +76,7 @@ class User implements UserInterface
      *         "remove"
      *     }
      * )
+     * @JMS\Groups({"frontend"})
      */
     private $tickets;
 
@@ -151,7 +152,7 @@ class User implements UserInterface
     }
 
     /**
-     * Counts amount of current tickets.
+     * Gets results with `isPending` = true.
      *
      * @JMS\VirtualProperty()
      * @JMS\Groups({"frontend"})
@@ -166,15 +167,18 @@ class User implements UserInterface
     }
 
     /**
-     * Counts amount of current tickets.
+     * Gets results with `isPending` = false.
      *
      * @JMS\VirtualProperty()
      * @JMS\Groups({"frontend"})
-     * @JMS\SerializedName("tickets")
+     * @JMS\SerializedName("results")
      */
-    public function countTickets()
+    public function getFinishedResults()
     {
-        return $this->getTickets()->count();
+        $where = Criteria::expr()->eq("isPending", false);
+        $criteria = Criteria::create()->where($where);
+        
+        return $this->getResults()->matching($criteria);
     }
 
     /**
