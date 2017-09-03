@@ -27,7 +27,7 @@ class Admin implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     * @JMS\Groups({"backend", "frontend"})
+     * @JMS\Groups({"backend", "frontend", "deserialize"})
      */
     private $id;
 
@@ -39,7 +39,7 @@ class Admin implements UserInterface
      *     min=5,
      *     minMessage="Username is too short!"
      * )
-     * @JMS\Groups({"backend", "frontend"})
+     * @JMS\Groups({"backend", "frontend", "deserialize"})
      */
     private $username;
 
@@ -47,13 +47,13 @@ class Admin implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     * @JMS\Groups({"deserialize"})
      */
     private $password;
 
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @Assert\Length(
      *     min=8,
      *     max=4096,
@@ -75,6 +75,7 @@ class Admin implements UserInterface
      * @var Workshop[]|ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="Workshop", mappedBy="owner")
+     * @JMS\Groups({"backend", "frontend"})
      */
     private $workshops;
 
