@@ -48,7 +48,7 @@ class User implements UserInterface
      *
      * @ORM\Column(type="string", unique=true)
      * @Assert\Regex(
-     *     pattern="/^[A-Za-z][A-Za-z](?:0[1-9]|[12]\d|3[01])[A-Za-z]\d$/",
+     *     pattern="/^[A-Za-z][A-Za-z](?:0[1-9]|[12]\d|3[01])(?:0[1-9]|1[012])\d$/",
      *     message="Personal code allows a specific pattern only!"
      * )
      * @JMS\Groups({"backend", "frontend"})
