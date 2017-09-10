@@ -1,9 +1,15 @@
-# eFiT
+## Installation
 
-Ziel des Schulungsprogramms ist es, Jugendlichen mithilfe von ökonomischen Experimenten Finanzwissen vermitteln und eine Sensibilisierung für typische (Fehl-)Verhaltensweisen im Bereich der persönlichen Finanzen erreichen. Diese Experimente bzw. Übungen werden online über eine Webseite zur Verfügung gestellt, sodass sie den Kern des Schulungsprogramms darstellt:
+To install and run the application on http://localhost:8000 please run:
 
-- Zu Beginn des Programms wird in den Schulen ein Workshop mit einem Trainer durchgeführt, der den Teilnehmern anhand der Übungen auf der Website die wesentlichen Inhalte näherbringt und sie in der Verwendung der Seite schult.
-- Anschließend sollen die Schüler die Website zuhause zur weiteren Übung nutzen können.
+* `composer updatre --no-interaction`
+* `php bin/console server:run`
+
+## Deployment
+
+To deploy the appliation to Scalingo please run (requires SSH access):
+
+* `bin/deploy`
 
 ## License
 
