@@ -85,7 +85,7 @@ class RegistrationController extends ApiController
         // check if the user already exists, otherwise create one
         $userRepository = $this->getRepository();
         $user = $userRepository
-            ->findOneByUsername($username);
+            ->loadUserByUsername($username);
 
         if ($user === null) {
             $user = new User();

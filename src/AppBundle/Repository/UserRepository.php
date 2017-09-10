@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Workshop;
 
@@ -12,8 +13,26 @@ use AppBundle\Entity\Workshop;
  * @package AppBundle
  * @author Armin Pfurtscheller
  */
-class UserRepository extends EntityRepository
+class UserRepository extends EntityRepository implements UserLoaderInterface
 {
+    /**
+     * Implements custom query logic to get username ignoring case sensivity.
+     * @see https://symfony.com/doc/current/security/entity_provider.html
+     * 
+     * @param string $username
+     * @return AppBundle\Entity\User|null
+     */
+    public function loadUserByUsername($username)
+    {
+        $username = mb_strtolower($username);
+        $query = $this->createQueryBuilder('u')
+            ->where('LOWER(u.username) = :username')
+            ->setParameter('username', $username)
+            ->getQuery();
+        
+        return $query->getOneOrNullResult();
+    }
+
 	/**
      * Counts workshop users without whole selection.
      * 
