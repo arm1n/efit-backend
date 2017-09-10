@@ -83,13 +83,13 @@ class SSE
      * @return void
      */
     public function streamCallback() {
+        $this->_closeSession();
         $this->start = time();
 
         while(!$this->_exitStream()) {
             $this->_writeComment();
             $this->_writeMessage();
             $this->_flushContent();
-            $this->_closeSession();
             
             sleep($this->sleepTime);
         };
