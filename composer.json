@@ -97,7 +97,10 @@
             },
             "compile":  [
                 "bash bin/jwt-keys -e JWT_KEY_PASS_PHRASE"
-              ]
+            ],
+            "php-config": [
+                "always_populate_raw_post_data=-1"
+            ]
         },
         "branch-alias": null
     }
