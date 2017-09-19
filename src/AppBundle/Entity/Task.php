@@ -390,9 +390,9 @@ class Task
     public static function getBlocks()
     {
         return [
-            self::BLOCK_FINANCIAL_KNOWLEDGE,
             self::BLOCK_CONSUMER_BEHAVIOUR,
             self::BLOCK_SELF_CONTROL,
+            self::BLOCK_FINANCIAL_KNOWLEDGE,
         ];
     }
 
@@ -407,9 +407,6 @@ class Task
     public static function getTypes()
     {
         return [
-            self::TYPE_INTEREST,
-            self::TYPE_DIVERSIFICATION,
-
             self::TYPE_RISK,
             self::TYPE_ANCHORING,
             self::TYPE_MENTAL_BOOKKEEPING,
@@ -419,6 +416,9 @@ class Task
             self::TYPE_SAVINGS_SUPPORTED,
             self::TYPE_SELF_COMMITMENT,
             self::TYPE_PROCRASTINATION,
+
+            self::TYPE_INTEREST,
+            self::TYPE_DIVERSIFICATION,
         ];
     }
 
@@ -435,12 +435,6 @@ class Task
     public static function getTasksByBlock($block)
     {
         switch($block) {
-            case self::BLOCK_FINANCIAL_KNOWLEDGE:
-                return [
-                    self::TYPE_INTEREST,
-                    self::TYPE_DIVERSIFICATION,
-                ];
-            
             case self::BLOCK_CONSUMER_BEHAVIOUR:
                 return [
                     self::TYPE_RISK,
@@ -455,6 +449,12 @@ class Task
                     self::TYPE_SAVINGS_SUPPORTED,
                     self::TYPE_SELF_COMMITMENT,
                     self::TYPE_PROCRASTINATION,
+                ];
+
+            case self::BLOCK_FINANCIAL_KNOWLEDGE:
+                return [
+                    self::TYPE_INTEREST,
+                    self::TYPE_DIVERSIFICATION,
                 ];
                 
             default:
@@ -475,10 +475,6 @@ class Task
     public static function getBlockByType($type)
     {
         switch($type) {
-            case self::TYPE_INTEREST:
-            case self::TYPE_DIVERSIFICATION:
-                return self::BLOCK_FINANCIAL_KNOWLEDGE;
-
             case self::TYPE_RISK:
             case self::TYPE_ANCHORING:
             case self::TYPE_MENTAL_BOOKKEEPING:
@@ -490,6 +486,10 @@ class Task
             case self::TYPE_SELF_COMMITMENT:
             case self::TYPE_PROCRASTINATION:
                 return self::BLOCK_SELF_CONTROL;
+
+            case self::TYPE_INTEREST:
+            case self::TYPE_DIVERSIFICATION:
+                return self::BLOCK_FINANCIAL_KNOWLEDGE;
 
             default:
                 return null;
