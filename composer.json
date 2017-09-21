@@ -100,6 +100,9 @@
             ],
             "php-config": [
                 "always_populate_raw_post_data=-1"
+            ],
+            "nginx-includes": [
+                "config/nginx-sse.conf"
             ]
         },
         "branch-alias": null
