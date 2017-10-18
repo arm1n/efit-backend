@@ -529,13 +529,7 @@ class Task
      */
     public static function getIsInteractiveByType($type)
     {
-        switch($type) {
-            case self::TYPE_SAVINGS_SUPPORTED:
-                return false;
-
-            default:
-                return true;
-        }
+        return true;
     }
 
     /**
@@ -551,6 +545,7 @@ class Task
         switch($type) {
             case self::TYPE_ANCHORING:
             case self::TYPE_MENTAL_BOOKKEEPING:
+            case self::TYPE_SAVINGS_SUPPORTED:
             case self::TYPE_PROCRASTINATION:
                 return true;
 
