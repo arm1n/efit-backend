@@ -2,7 +2,7 @@
 
 To install and run the application on http://localhost:8000 please run:
 
-* `composer updatre --no-interaction`
+* `composer update --no-interaction`
 * `php bin/console server:run`
 
 ## Deployment
