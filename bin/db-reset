@@ -1,0 +1,2 @@
+#!/bin/bash
+mysql -u efit_produc_4645 -p efit_produc_4645 -P 10000 -h 127.0.0.1 < app/DatabaseDumps/reset.sql
