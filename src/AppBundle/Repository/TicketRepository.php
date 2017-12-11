@@ -26,7 +26,7 @@ class TicketRepository extends EntityRepository
     public function getTicketsByWorkshop(Workshop $workshop)
     {
         $query = $this->getEntityManager()->createQuery('
-            SELECT t.id
+            SELECT t.id, u.username
             FROM AppBundle:Ticket t
             INNER JOIN t.user u
             INNER JOIN u.workshop w
