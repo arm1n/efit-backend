@@ -1,6 +1,6 @@
 #!/bin/bash
 
-usage () { echo "Usage : $0 -p <password as plaintext> | $0 -e <password from env>"; }
+usage () { echo "Usage : $0 -p <password as plaintext> | $0 -e <password from env>"; }
 
 DIR="var/jwt"
 PUBLIC="${DIR}/public.pem"

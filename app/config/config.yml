@@ -1,7 +1,7 @@
 imports:
-    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: parameters.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -14,7 +14,7 @@ parameters:
 framework:
     #esi: ~
     translator: { fallbacks: ['%locale%'] }
-    secret: '%secret%'
+    secret: '%env(SECRET)%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
         strict_requirements: ~
@@ -49,12 +49,14 @@ twig:
 doctrine:
     dbal:
         driver: pdo_mysql
-        host: '%database_host%'
-        port: '%database_port%'
-        dbname: '%database_name%'
-        user: '%database_user%'
-        password: '%database_password%'
+        host: '%env(DATABASE_HOST)%'
+        port: '%env(DATABASE_PORT)%'
+        dbname: '%env(DATABASE_NAME)%'
+        user: '%env(DATABASE_USER)%'
+        password: '%env(DATABASE_PASSWORD)%'
+        unix_socket: '%env(DATABASE_SOCKET)%'
         charset: utf8
+        server_version: '5.7'
 
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
@@ -65,17 +67,17 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    username: '%mailer_user%'
-    password: '%mailer_password%'
-    transport: '%mailer_transport%'
-    delivery_addresses: '%mailer_recipients%'
+    username: '%env(MAILER_USER)%'
+    password: '%env(MAILER_PASSWORD)%'
+    transport: '%env(MAILER_TRANSPORT)%'
+    delivery_addresses: ['%env(MAILER_RECIPIENTS)%']
 
 # JWT Auth Configuration
 lexik_jwt_authentication:
-    private_key_path: '%jwt_private_key_path%'
-    public_key_path:  '%jwt_public_key_path%'
-    pass_phrase:      '%jwt_key_pass_phrase%'
-    token_ttl:        '%jwt_token_ttl%'
+    private_key_path: '%kernel.root_dir%/../var/jwt/private.pem'
+    public_key_path:  '%kernel.root_dir%/../var/jwt/public.pem'
+    pass_phrase:      '%env(JWT_KEY_PASS_PHRASE)%'
+    token_ttl:        '%env(JWT_TOKEN_TTL)%'
     token_extractors:
         authorization_header:
             enabled: true

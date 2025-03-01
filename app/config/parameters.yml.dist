@@ -2,27 +2,21 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
-    # Database
+    env(DATABASE_HOST): db
+    env(DATABASE_PORT): 3306
+    env(DATABASE_NAME): finanz-training
+    env(DATABASE_USER): root
+    env(DATABASE_PASSWORD): 123456
+    env(DATABASE_SOCKET): '/tmp/mysql.sock'
 
-    database_host: 127.0.0.1
-    database_port: ~
-    database_name: symfony
-    database_user: root
-    database_password: ~
-    #database_path: '%kernel.project_dir%/var/data/data.sqlite'
+    env(MAILER_USER): null
+    env(MAILER_PASSWORD): null
+    env(MAILER_TRANSPORT): gmail
+    env(MAILER_RECIPIENTS): 'recipient1@gmail'
 
-    # Mail
-    mailer_transport: gmail
-    #mailer_host: 127.0.0.1
-    mailer_user: ~
-    mailer_password: ~
-    mailer_recipients: ['recpient1@domain.com', 'recipient2@domain.com']
+    #env(JWT_PRIVATE_KEY_PATH): '%kernel.root_dir%/../var/jwt/private.pem'
+    #env(JWT_PUBLIC_KEY_PATH): '%kernel.root_dir%/../var/jwt/public.pem'
+    env(JWT_KEY_PASS_PHRASE): 'DlbF1|l)U8HI:m$'
+    env(JWT_TOKEN_TTL): 10800
 
-    # Security
-    secret: ThisTokenIsNotSoSecretChangeIt
-
-    # JWT
-    jwt_private_key_path: '%kernel.root_dir%/../var/jwt/private.pem'
-    jwt_public_key_path: '%kernel.root_dir%/../var/jwt/public.pem'
-    jwt_key_pass_phrase: '6p%##u4PmSdxtAb!*#Ju'
-    jwt_token_ttl: 10800
+    env(SECRET): ad786724427e2f560f84459259d5d9f9

@@ -19,9 +19,9 @@
 /web/bundles/
 
 # Custom
-/bin/db-connect
-/bin/db-tunnel
-/bin/db-import
 /bin/jwt-keys
-/bin/deploy
 /var/jwt
+
+# JetBrains IDE
+.idea/
+

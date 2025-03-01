@@ -27,7 +27,6 @@
         "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.2",
         "gesdinet/jwt-refresh-token-bundle": "^0.2.0",
-        "incenteev/composer-parameter-handler": "^2.0",
         "jms/serializer-bundle": "^2.0",
         "lexik/jwt-authentication-bundle": "^2.4",
         "nelmio/cors-bundle": "^1.5",
@@ -45,7 +44,6 @@
     },
     "scripts": {
         "symfony-scripts": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -68,37 +66,8 @@
         "symfony-var-dir": "var",
         "symfony-web-dir": "web",
         "symfony-tests-dir": "tests",
+        "symfony-cache-warmup": true,
         "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml",
-            "env-map" : {
-                "database_host": "DATABASE_HOST",
-                "database_port": "DATABASE_PORT",
-                "database_name": "DATABASE_NAME",
-                "database_user": "DATABASE_USER",
-                "database_password": "DATABASE_PASS",
-
-                "mailer_transport": "MAILER_TRANSPORT",
-                "mailer_user": "MAILER_USER",
-                "mailer_password": "MAILER_PASSWORD",
-                "mailer_recipients": "MAILER_RECIEPIENTS",
-
-                "secret": "SECRET",
-
-                "jwt_private_key_path": "JWT_PRIVATE_KEY_PATH",
-                "jwt_public_key_path": "JWT_PUBLIC_KEY_PATH",
-                "jwt_key_pass_phrase": "JWT_KEY_PASS_PHRASE",
-                "jwt_token_ttl": "JWT_TOKEN_TTL"
-            }
-        },
-        "paas": {
-            "compile":  [
-                "bash bin/jwt-keys -e JWT_KEY_PASS_PHRASE"
-            ],
-            "php-config": [
-                "always_populate_raw_post_data = -1"
-            ]
-        },
         "branch-alias": null
     }
 }
